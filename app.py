@@ -5,7 +5,7 @@ import streamlit as st
 # Lectura del archivo
 archivo = 'Ejercicio Ingeniero de datos.xlsx'
 df = pd.read_excel(archivo, sheet_name='Ejercicio 1', header = 4)
-df = df.rename(columns={'2015p/': '2015'})
+df = df.rename(columns={'2015p/': 2015})
 
 # Crosstable
 df = pd.melt(df, id_vars=['Actividad económica', 'Entidad','Concepto'], 
