@@ -56,7 +56,7 @@ sidebar = st.sidebar
 
 if option_selected == "Analisis general":
     
-    sidebar.image('INEGI_3.JPG')
+    sidebar.image('INEGI_3.jpg')
     sidebar.header('Producto Interno Bruto en México \n `2003 - 2016`')
     
     # Mostrar las primeras filas del dataframe
