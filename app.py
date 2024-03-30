@@ -61,7 +61,7 @@ df_original['Entidad'].replace({'Michoacán de Ocampo': 'Michoacán',
 
 
 # Unión con la latitud y longitud de los estados
-df_original.merge(informacion_estados, on='Entidad', how='left')
+df_original = df_original.merge(informacion_estados, on='Entidad', how='left')
 
 df = df_original[['Actividad económica', 'Entidad','Año','PIB']]
 
@@ -77,7 +77,10 @@ sidebar = st.sidebar
 
 if option_selected == "Analisis general":
     
-    df = df[df["Entidad"] == "Total nacional"]
+    df = df[df["Entidad"] != "Total nacional"]
+    chart_data = df_original[df_original["Entidad"] != "Total nacional"]
+    #chart_data_pib_1000 = chart_data.loc[:"PIB"]/10000
+    #chart_data.loc[:, "PIB/10000"] = chart_data_pib_1000s
 
     sidebar.image('INEGI_3.jpg')
     sidebar.header('Producto Interno Bruto en México \n `2003 - 2016`')
@@ -97,7 +100,32 @@ if option_selected == "Analisis general":
     st.write(df_analisis_general)
 
     # Mapa
-    chart_data = df_original
+    st.write(chart_data)
+    #st.map(chart_data, latitude='Latitud', longitude='Longitud', size='PIB/10000')
+    color_scale = [(0, '#0A2F51'), (1,'#39A96B')]
+    fig = px.scatter_mapbox(chart_data, 
+                            lat="Latitud", 
+                            lon="Longitud", 
+                            hover_name="Entidad", 
+                            hover_data=["Entidad", "PIB"],
+                            color="PIB",
+                            color_continuous_scale=px.colors.cyclical.IceFire, 
+                            size_max=15,
+                            size="PIB",
+                            zoom=3.5, 
+                            height=400,
+                            width=800)
+    #open-street-map
+    fig.update_layout(mapbox_style="light",
+                    mapbox=dict(
+                        bearing=0,
+                        center=dict(
+                            lat = 24,
+                            lon = -102
+                        )))
+
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    st.write(fig)
 
 elif option_selected == "Análisis por estado":
 
