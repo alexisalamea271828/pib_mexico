@@ -32,7 +32,7 @@ fecha_consulta = df_original.iloc[137, 0]
 fecha_consulta = fecha_consulta[19:]  
 
 # Información sobre los estados: latitud y longitud
-informacion_estados = pd.read_csv("Latitud y longitud de los estados.txt", sep=",")
+informacion_estados = pd.read_csv("Latitud y longitud de los estados.csv")
 informacion_estados = informacion_estados.sort_values(by="Entidad")
 informacion_estados = informacion_estados.reset_index(drop=True)
 
@@ -53,6 +53,12 @@ df_original['Año'] = df_original['Año'].astype('int64')
 
 # Quitar los espacios en blanco al inicio y al final de la columna de entidades
 df_original['Entidad'] = df_original['Entidad'].str.strip()
+
+# Sustituir valores de algunos estados
+df_original['Entidad'].replace({'Michoacán de Ocampo': 'Michoacán',
+                                                        'Veracruz de Ignacio de la Llave':'Veracruz',
+                                                        'Coahuila de Zaragoza':'Coahuila'}, inplace=True)
+
 
 # Unión con la latitud y longitud de los estados
 df_original.merge(informacion_estados, on='Entidad', how='left')
@@ -92,38 +98,6 @@ if option_selected == "Analisis general":
 
     # Mapa
     chart_data = df_original
-
-    # 2014 locations of car accidents in the UK
-    UK_ACCIDENTS_DATA = ('https://raw.githubusercontent.com/uber-common/'
-                        'deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv')
-
-    # Define a layer to display on a map
-    layer = pdk.Layer(
-        'HexagonLayer',
-        chart_data,
-        get_position=['Longitud', 'Latitud'],
-        auto_highlight=True,
-        elevation_scale=50,
-        pickable=True,
-        elevation_range=[0, 3000],
-        extruded=True,                 
-        coverage=1)
-
-    # Set the viewport location
-    view_state = pdk.ViewState(
-        longitude=-1.415,
-        latitude=52.2323,
-        zoom=6,
-        min_zoom=5,
-        max_zoom=15,
-        pitch=40.5,
-        bearing=-27.36)
-
-    # Render
-    r = pdk.Deck(layers=[layer], initial_view_state=view_state)
-    r.to_html('demo.html', notebook_display=False)
-    
-    st.write(r)
 
 elif option_selected == "Análisis por estado":
 
