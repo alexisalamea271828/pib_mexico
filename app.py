@@ -32,7 +32,7 @@ fecha_consulta = df_original.iloc[137, 0]
 fecha_consulta = fecha_consulta[19:]  
 
 # Información sobre los estados: latitud y longitud
-informacion_estados = pd.read_csv("Latitud y longitud de los estados.csv")
+informacion_estados = pd.read_excel("Latitud y longitud de los estados.xlsx")
 informacion_estados = informacion_estados.sort_values(by="Entidad")
 informacion_estados = informacion_estados.reset_index(drop=True)
 
