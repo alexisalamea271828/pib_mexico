@@ -99,8 +99,16 @@ if option_selected == "Analisis general":
     años = df['Año'].unique()
     entidades = df['Entidad'].unique()
 
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''En el siguiente filtro seleccione un año entre 2003 y 2016. Los KPIs mostrarán los valores de: \n
+        * Valor del PIB nacional y una comparación del año seleccionado con el del año 2003.\n 
+        * Valor del PIB per cápita nacional y una comparación del año seleccionado con el del año 2003. \n
+        ''')
+    
     col1, col2, col3 = st.columns((1,6,1))
 
+    # Filtros
     año_seleccionado = col2.selectbox("Año a comparar: ", años)
 
     chart_data = chart_data[chart_data['Año'] == año_seleccionado]
@@ -125,7 +133,13 @@ if option_selected == "Analisis general":
                     value = "${:,.2f}".format(PIB_per_capita_nacional),
                     delta = "{:.2%} vs año 2003".format(delta_PIB_per_capita_nacional))
     
-    
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''En el siguiente contenedor observará 5 pestañas que mostrarán una gráfica de área que representa
+        el comportamiento del PIB en la categoría seleccionada a través del tiempo. Esta información no depende del filtro de año. 
+        ''')
+
+    # Gráficos de área por categoría
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["PIB", 
                                             "Actividades primarias", 
                                             "Actividades secundarias",
@@ -177,6 +191,14 @@ if option_selected == "Analisis general":
         col1, col2, col3 = st.columns((1,6,1))
         col2.write(fig5)
 
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''En el siguiente mapa de México se ubica el valor del PIB por estado para TODAS LAS ACTVIDADES ECONÓMICAS.
+        Cada punto se ubicó en la capital de cada uno de los estados, a través de su latitud y longitud. El color y el tamaño del punto
+        nos dice qué tan alto o bajo es el valor del PIB en dicho estado. 
+        Esta información SÍ depende del año seleccionado. 
+        ''')
+
     # Mapa
     st.markdown('''<h1 style='font-size: 1.7rem; text-align:center; color: #DAF7A6;'>PIB por estado en {}</h1>'''.format(año_seleccionado), unsafe_allow_html=True)
 
@@ -211,6 +233,12 @@ if option_selected == "Analisis general":
 
     chart_data.sort_values(by = "PIB", inplace = True)
     
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''A continuación se muestra el top 5 de los estados con mayor PIB en el año seleccionado. 
+        Se considera la información de TODAS LAS ACTIVIDADES ECONÓMICAS, no está desglosada una a una.
+        ''')
+
     # TOP 5 de estados por PIB
     st.markdown('''<h1 style='font-size: 1.7rem; text-align:center; color: #DAF7A6;'>Top 5 de estados en {}</h1>'''.format(año_seleccionado), unsafe_allow_html=True)
     col1, col2, col3 = st.columns((1,6,1))
@@ -232,6 +260,13 @@ if option_selected == "Analisis general":
                         max_value=max(progress_chart_column.PIB),
                     )}
                 )
+
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''El siguiente gráfico es continuación del anterior. En este se muestran gráficas de barras con la información del PIB de los estados en el año seleccionado.
+        Se presenta un análisis para:  \n 1) TODAS LAS ACTIVIDADES ECONÓMICAS. \n 2) Actividades primarias.
+        \n 3) Actividades secundarias. \n 4) Actividades terciarias.
+        ''')
 
     # Gráfico de barras por tipo de actividad económica
     st.markdown('''<h1 style='font-size: 1.7rem; text-align:center; color: #DAF7A6;'>Analisis por tipo de actividad económica en {}</h1>'''.format(año_seleccionado), unsafe_allow_html=True)
@@ -295,6 +330,15 @@ elif option_selected == "Análisis por estado":
     años = df['Año'].unique()
     entidades = df['Entidad'].unique()
     actividades_economicas = df['Actividad económica'].unique()
+
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''A continuación de muestra un conjunto de filtros que permiten seleccionar un año entre 2003 y 2016, una de las 31 entidades federativas (o la Ciudad de México, antes D.F.) y el tipo de actividad económica.
+        Los KPIs mostrarán los valores de:\n
+        * El mayor PIB registrado en el estado seleccionado entre 2003 y 2016 (así como el año en el que se presentó).\n 
+        * El mayor incremento de PIB registrado en el estado seleccionado, comparado con el año previo, entre 2004 y 2016 (así como el año en el que se presentó). \n
+        * Porcentaje que representa del PIB Nacional el PIB del estado seleccionado, en el año seleccionado, por cada tipo de actividad económica (hay 3).\n
+        ''')
 
     col1, col2, col3, col4 = st.columns((1,4,4,1))
     col5, col6, col7 = st.columns((1,8,1))
@@ -387,6 +431,12 @@ elif option_selected == "Análisis por estado":
     column3.metric(label="Actividades secundarias", value = "{:.2%}".format(kpi_4))
     column4.metric(label="Actividades terciarias", value = "{:.2%}".format(kpi_5))
 
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''Gráfica que muestra el comportamiento del PIB del estado entre 2003 y el año seleccionado, 
+        para las categorías de actividades económicas seleccionadas enn los filtros anteriores. 
+        ''')
+
     # Gráfica de área de comportamiento del PIB a través del tiempo
     chart_data = df_analisis_estado
     fig = px.area(chart_data, x="Año", y="PIB", log_y = True, 
@@ -396,6 +446,11 @@ elif option_selected == "Análisis por estado":
     
     col1, col2, col3 = st.columns((1,6,1))
     col2.write(fig)
+
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''Tabla que muestra los 3 años que tuvieron un mayor crecimiento de PIB comparado con el del año previo, para el estado seleccionado. 
+        ''')
 
     # TOP 3 de años con mayor incremento del PIB
     st.markdown('''<h1 style='font-size: 1.5rem; text-align:center; color: #DAF7A6;'>Top 3 de años con mayor incremento de PIB (respecto al año anterior) en {}</h1>'''.format(entidad_seleccionada), unsafe_allow_html=True)
@@ -424,13 +479,75 @@ elif option_selected == "Análisis por estado":
                     )}
                 )
 
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''Gráfica de área que representa el comportamiento de la TASA DE CAMBIO del PIB con el paso de los años, para el estado seleccionado. 
+        Esta gráfica no depende del filtro de año seleccionado.
+        ''')
+
     # Gráfico de área para representar el cambio en el PIB año tras año
     fig_delta_PIB = px.area(chart_data_estado_sin_2003, x="Año", y="delta_PIB [porcentaje]", log_y = False, 
                 #color="PIB", 
                 markers = True,
                 title="Comportamiento del incremento del PIB de {} a través del tiempo".format(entidad_seleccionada))
     columna1, columna2, columna3 = st.columns((1,6,2))
-    col2.write(fig_delta_PIB)
+    columna2.write(fig_delta_PIB)
+
+    # Explicación
+    with st.expander("Ver información"):
+        st.write('''Gráfica de pie que representa la proporción del PIB del estado en el año seleccionado por cada tipo de actividad económica.
+        ''')
+
+    # Gráfico de pie que representa la proporción del PIB por tipo de actividad
+    df_aux = pd.DataFrame()
+    df_aux["Tipo de actividad"] = ["Actividades primarias", "Actividades secundarias", "Actividades terciarias"]
+    df_aux["PIB"] = [kpi_3_estado,kpi_4_estado,kpi_5_estado]
+    fig_pie_chart = px.pie(df_aux, values='PIB', names='Tipo de actividad', 
+                    color = ["#D6DBDF","#F1C40F","#D35400"],
+                    title="Porcentaje del PIB en {} en {} por tipo de actividad".format(entidad_seleccionada, año_final_seleccionado))
+    columna1, columna2, columna3 = st.columns((1,6,2))
+    columna2.write(fig_pie_chart)
+
+elif option_selected == "Sobre los indicadores":
+    st.markdown('''Con el objetivo de tener una mejor visión del producto interno bruto de los estados del país, y del país en general, 
+    se presenta un conjunto de gráficos y filtros que permiten analizar la información proporcionada. \n Para ello, se crearon dos pestañas en la presente aplicación: \n
+    - Análisis general, que analiza la información a través de indicadores a NIVEL NACIONAL.
+    - Análisis por estado, en el que se profundiza sobre la información que se tiene sobre cada ENTIDAD FEDERATIVA.\n Con lo anterior se permite 
+    tener una analisis descriptivo de la información, como la obtención de los valores máximos del PIB y de PIB per cápita, los valores totales considerando todas las actividades económicas y/o estados, porcentajes, entre otras cosas. \n\n De manera
+    muy particular, se proponen el siguiente set de indicadores para monitorear la situación del país y de los estados, y que podría permitirnos tomar decisiones más informadas y basadas en datos: \n
+    Tasa de cambio del PIB respecto al año previo. Este indicador nos permite determinar si el valor de la producción de 
+    bienes y servicios de demanda final en un estado o en el país ha incrementado o disminuido. Si bien el PIB es una 
+    variable macroeconómica que depende de diversos factores, que se podrían relacionar con el progreso técnico, la inversión,
+    la apertura de mercados, o incluso (de manera negativa) con desastres naturales que afectan la producción de miles de 
+    habitantes, monitorear este indicador nos invitaría a preguntarnos cuáles son las causas que están impactando para que 
+    este varíe y en qué medida ha estado afectando al país o estado. Por ejemplo, de acuerdo con los datos, el PIB de Campeche
+    ha estado disminuyendo año tras año, a excepción del año 2004 y 2013. ¿Qué ha originado que el estado se encuentre en dicha
+    situación? \n
+    PIB per cápita. Como el PIB es una medida de la producción de bienes y servicios de demanda final, es lógico esperar que, 
+    en la mayoría de los casos, una región con más habitantes tenga mayor PIB que otra con menos habitantes y con condiciones
+    similares que favorezcan en la misma medida la producción de dichos bienes y servicios. Por esta razón, se propone monitorear
+    el PIB per cápita, que es una medida del PIB de la región por persona. Es como si la riqueza de la región (país o estado) 
+    se repartiera a todos por igual. En este sentido, medir el PIB per cápita permitiría tener una mejor comparación de la misma 
+    región en años diferentes, o, por ejemplo, una comparación entre el PIB per cápita de un estado y otro en el mismo año.
+    Si bien no se encontró una fuente que proporcionara la población anual por estado (solo había de los censos de la población
+    que se realizaba cada cierta cantidad de años), sí se contró una con la población del país entre 2003 y 2016.
+    Con esto, se obtenía que en 2016 a cada mexicano le hubiese correspondido $140,127.43 si la riqueza del país se 
+    hubiese repartido a todos por igual, que al mismo tiempo fue un 14.28% mayor comparado con 2003.\n
+    Contribución del PIB por tipo de actividad económica. Este indicador nos permitiría determinar qué tipo de
+    actividades se llevan a cabo principalmente en cada país o región. Con esto, si se desea impulsar a un estado o al país
+    a que mejore su PIB se podría ver qué tipo de soluciones se les podría brindar dependiendo de ello. Por ejemplo, si la mayor
+    parte del PIB de un estado o país se basa en actividades relacionadas con el trasporte, el turismo o la comercialización
+    de productos y servicios, puede que se deba a que su localización geográfica no le permita basar su economía en la producción
+    de fresas o tomates. Entonces, no le sería de utilidad que se busque impulsar la agricultura porque las condiciones
+    climatológicas no le favorecen, pero quizás sí le ayude que se invierta en los atractivos turísticos o la infraestructura
+    de carreteras para que se sigan impulsando las actividades relacionadas con el transporte, tal es el caso de la ciudad de México,
+    que en el 2016, solo el 0.06% de su PIB se debió a actividades primarias, pero el 86.6% se debió a actividades terciarias.\n\n
+    
+
+
+
+
+    ''')
 
 # PIE DE PÁGINA
 col1, col2, col3 = st.columns ((1,6,1))
